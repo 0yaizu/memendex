@@ -11,5 +11,6 @@ export function createAuth(databaseUrl: string) {
     emailAndPassword: {
       enabled: true,
     },
+		trustedOrigins: ['http://localhost:3000'],
   })
 }
