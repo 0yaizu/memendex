@@ -1,0 +1,19 @@
+{
+  "name": "@memendex/ui",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {},
+  "dependencies": {
+    "react": "^19",
+    "react-dom": "^19",
+    "@yamada-ui/react": "^2"
+  },
+  "devDependencies": { "@types/react": "^19", "@types/react-dom": "^19" },
+  "exports": {
+    ".": "./index.ts",
+    "./components/*": "./components/*/index.ts",
+    "./hooks/*": "./hooks/*/index.ts",
+    "./providers/*": "./providers/*/index.ts"
+  }
+}
