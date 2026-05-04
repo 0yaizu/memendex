@@ -21,7 +21,7 @@ app.use('*', (c, next) => {
   return corsMiddleware(c, next)
 })
 
-app.on(['GET', 'POST'], '/api/auth/**', (c) => {
+app.on(['GET', 'POST'], '/api/auth/*', (c) => {
   const auth = createAuth(c.env.DATABASE_URL)
   return auth.handler(c.req.raw)
 })
