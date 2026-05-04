@@ -87,6 +87,25 @@ memesRoute.post('/upload', authMiddleware, async (c) => {
 	return c.json({ meme }, 201)
 })
 
+memesRoute.get('/', authMiddleware, async (c) => {
+  const userId = c.get('userId')
+  const db = createDb(c.env.DATABASE_URL)
+
+  const allMemes = await db.query.memes.findMany({
+    where: eq(memes.userId, userId),
+    with: {
+      memeTags: {
+        with: {
+          tag: true,
+        },
+      },
+    },
+    orderBy: (memes, { desc }) => [desc(memes.createdAt)],
+  })
+
+  return c.json({ memes: allMemes })
+})
+
 memesRoute.get('/:id', authMiddleware, async (c) => {
 	const id = Number(c.req.param('id'))
 
