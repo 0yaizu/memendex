@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { createDb } from '@db/client'
-import { memes } from '@db/schema'
+import { memes, memeTags, tags } from '@db/schema'
 import { authMiddleware } from '@src/middleware/auth'
 import { eq } from 'drizzle-orm'
 
@@ -37,6 +37,8 @@ memesRoute.post('/upload', authMiddleware, async (c) => {
 	const title = formData.get('title') as string | null
 	const description = formData.get('description') as string | null
 	const userId = c.get('userId')
+	const tagsJson = formData.get('tags') as string | null
+	const tagNames: string[] = tagsJson ? JSON.parse(tagsJson) : []
 
 	if (!file || !title) {
 		return c.json({ error: '画像・タイトルは必須です' }, 400)
@@ -83,6 +85,23 @@ memesRoute.post('/upload', authMiddleware, async (c) => {
     title: title,
     description: description ?? undefined,
   }).returning()
+
+	if (!meme) return c.json({ error: 'ミームの保存に失敗しました' }, 500)
+
+	for (const name of tagNames) {
+		const [tag] = await db
+			.insert(tags)
+			.values({ name })
+			.onConflictDoUpdate({ target: tags.name, set: { name }})
+			.returning()
+
+		if (tag) {
+			await db
+				.insert(memeTags)
+				.values({ memeId: meme.id, tagId: tag.id })
+				.onConflictDoNothing()
+		}
+	}
 
 	return c.json({ meme }, 201)
 })

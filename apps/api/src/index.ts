@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { createAuth } from './auth'
 import memesRoute from './routes/memes'
+import tagsRoute from './routes/tags'
 
 type Bindings = {
   DATABASE_URL: string
@@ -27,5 +28,6 @@ app.on(['GET', 'POST'], '/api/auth/*', (c) => {
 })
 
 app.route('/api/memes', memesRoute)
+app.route('/api', tagsRoute)
 
 export default app
