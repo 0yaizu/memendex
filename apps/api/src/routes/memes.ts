@@ -1,6 +1,8 @@
 import { Hono } from 'hono'
 import { createDb } from '@db/client'
-import { memes, tags, memeTags } from '@db/schema'
+import { memes } from '@db/schema'
+import { authMiddleware } from '@src/middleware/auth'
+import { eq } from 'drizzle-orm'
 
 type Bindings = {
   DATABASE_URL: string
@@ -29,15 +31,15 @@ memesRoute.get('/image/:userId/:filename', async (c) => {
 	})
 })
 
-memesRoute.post('/upload', async (c) => {
+memesRoute.post('/upload', authMiddleware, async (c) => {
 	const formData = await c.req.formData()
 	const file = formData.get('image') as File | null
 	const title = formData.get('title') as string | null
 	const description = formData.get('description') as string | null
-	const userId = formData.get('userId') as string | null
+	const userId = c.get('userId')
 
-	if (!file || !userId || !title) {
-		return c.json({ error: '画像・ユーザーID・タイトルは必須です' }, 400)
+	if (!file || !title) {
+		return c.json({ error: '画像・タイトルは必須です' }, 400)
 	}
 
 	// ファイルサイズチェック
@@ -83,6 +85,33 @@ memesRoute.post('/upload', async (c) => {
   }).returning()
 
 	return c.json({ meme }, 201)
+})
+
+memesRoute.get('/:id', authMiddleware, async (c) => {
+	const id = Number(c.req.param('id'))
+
+	if (isNaN(id)) {
+    return c.json({ error: '無効なIDです' }, 400)
+  }
+
+	const db = createDb(c.env.DATABASE_URL)
+
+	const meme = await db.query.memes.findFirst({
+    where: eq(memes.id, id),
+    with: {
+      memeTags: {
+        with: {
+          tag: true,
+        },
+      },
+    },
+  })
+
+	if (!meme) {
+    return c.json({ error: 'ミームが見つかりません' }, 404)
+  }
+
+	return c.json({ meme })
 })
 
 export default memesRoute

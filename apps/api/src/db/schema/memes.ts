@@ -1,6 +1,7 @@
 import { pgTable, serial, text, boolean, timestamp, integer, primaryKey } from "drizzle-orm/pg-core";
 import { user } from './auth'
 import { tags } from "./tags";
+import { relations } from "drizzle-orm";
 
 export const memes = pgTable('memes', {
   id:          serial('id').primaryKey(),
@@ -19,3 +20,18 @@ export const memeTags = pgTable('meme_tags', {
 }, (t) => [
 	primaryKey({ columns: [t.memeId, t.tagId] }),
 ])
+
+export const memesRelations = relations(memes, ({ many }) => ({
+  memeTags: many(memeTags),
+}))
+
+export const memeTagsRelations = relations(memeTags, ({ one }) => ({
+  meme: one(memes, {
+    fields: [memeTags.memeId],
+    references: [memes.id],
+  }),
+  tag: one(tags, {
+    fields: [memeTags.tagId],
+    references: [tags.id],
+  }),
+}))
