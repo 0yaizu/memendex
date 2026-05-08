@@ -1,10 +1,10 @@
 import { pgTable, serial, text, boolean, timestamp, integer, primaryKey } from "drizzle-orm/pg-core";
-import { users } from './users'
+import { user } from './auth'
 import { tags } from "./tags";
 
 export const memes = pgTable('memes', {
   id:          serial('id').primaryKey(),
-  userId:      text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  userId:      text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
   imageUrl:    text('image_url').notNull(),
 	title: 		   text('title').notNull(),
   description: text('description'),

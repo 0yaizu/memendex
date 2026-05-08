@@ -25,7 +25,13 @@
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false
+    "noPropertyAccessFromIndexSignature": false,
+
+		// alias
+		"paths": {
+			"@src/*": ["./src/*"],
+			"@dotenv": ["./.dev.vars"]
+		}
   },
 	"include": ["src/**/*.ts"]
 }
