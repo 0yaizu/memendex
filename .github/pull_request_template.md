@@ -23,7 +23,7 @@ closes #
 - [ ] `apps/web` (Next.js フロントエンド)
 - [ ] `apps/api` (Hono バックエンド)
 - [ ] `packages/db` (Drizzle スキーマ)
-- [ ] インフラ・設定 (R2, Neon, Clerk 等)
+- [ ] インフラ・設定 (R2, Neon 等)
 
 ## DBマイグレーション
 - [ ] スキーマ変更なし
