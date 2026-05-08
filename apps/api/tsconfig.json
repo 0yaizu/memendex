@@ -30,7 +30,8 @@
 		// alias
 		"paths": {
 			"@src/*": ["./src/*"],
-			"@dotenv": ["./.dev.vars"]
+			"@dotenv": ["./.dev.vars"],
+			"@db/*": ["./src/db/*"]
 		}
   },
 	"include": ["src/**/*.ts"]

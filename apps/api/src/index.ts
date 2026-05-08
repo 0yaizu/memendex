@@ -1,10 +1,12 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { createAuth } from './auth'
+import memesRoute from './routes/memes'
 
 type Bindings = {
   DATABASE_URL: string
 	CORS_ORIGIN: string
+	memendex_images: R2Bucket
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -23,5 +25,7 @@ app.on(['GET', 'POST'], '/api/auth/**', (c) => {
   const auth = createAuth(c.env.DATABASE_URL, c.env.CORS_ORIGIN)
   return auth.handler(c.req.raw)
 })
+
+app.route('/api/memes', memesRoute)
 
 export default app
