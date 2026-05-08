@@ -20,7 +20,7 @@ app.use('*', (c, next) => {
 })
 
 app.on(['GET', 'POST'], '/api/auth/**', (c) => {
-  const auth = createAuth(c.env.DATABASE_URL)
+  const auth = createAuth(c.env.DATABASE_URL, c.env.CORS_ORIGIN)
   return auth.handler(c.req.raw)
 })
 
