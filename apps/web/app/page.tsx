@@ -34,10 +34,16 @@ export default function GalleryPage() {
 
   useEffect(() => {
     const fetchMemes = async () => {
-      const res = await apiClient.get('/api/memes')
-      const data = await res.json()
-      setMemes(data.memes)
-      setLoading(false)
+			try {
+				const res = await apiClient.get('/api/memes')
+				if (!res.ok) return
+				const data = await res.json()
+				setMemes(data.memes)
+			} catch (e) {
+				console.error(e)
+			} finally {
+				setLoading(false)
+			}
     }
     fetchMemes()
   }, [])
