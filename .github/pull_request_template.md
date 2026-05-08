@@ -6,7 +6,7 @@
 - 
 
 ## 関連Issue
-closes #
+<!-- 関連するIssueがある場合、(closes #[Issue番号]) -->
 
 ## 変更の種類
 - [ ] ✨ 新機能 (Feature)
@@ -23,17 +23,16 @@ closes #
 - [ ] `apps/web` (Next.js フロントエンド)
 - [ ] `apps/api` (Hono バックエンド)
 - [ ] `packages/db` (Drizzle スキーマ)
-- [ ] インフラ・設定 (R2, Neon, Clerk 等)
+- [ ] インフラ・設定 (R2, Neon 等)
 
 ## DBマイグレーション
 - [ ] スキーマ変更なし
 - [ ] マイグレーションファイルを追加済み (`bun db:migrate`)
 
 ## 動作確認
-- [ ] ローカルで動作確認済み (`bun dev`)
-- [ ] ミームのアップロード・タグ付けが正常に動作する
-- [ ] 型エラーなし (`bun typecheck`)
-- [ ] Lintエラーなし (`bun lint`)
+- [ ] ミームのアップロードができる
+- [ ] タグ付け機能が機能している
+- [ ] ミームの一覧が取得できている
 
 ## スクリーンショット（UI変更がある場合）
 | Before | After |
