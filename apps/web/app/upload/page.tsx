@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Box, Button, Heading, Input, Textarea, VStack, Text } from '@yamada-ui/react'
 import TagInput from '@components/tag-input'
