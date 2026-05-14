@@ -45,11 +45,16 @@ export default function TagInput({ tagList, onChange }: Props) {
 
     if (debounceTimer.current) clearTimeout(debounceTimer.current)
     if (value.trim()) {
-      debounceTimer.current = setTimeout(async () => {
-        const res = await apiClient.get(`/api/tags/search?q=${encodeURIComponent(value)}`)
-        const data = await res.json()
-        setSuggestions(data.tags)
-      }, 300)
+			try {
+      	debounceTimer.current = setTimeout(async () => {
+        	const res = await apiClient.get(`/api/tags/search?q=${encodeURIComponent(value)}`)
+        	const data = await res.json()
+        	setSuggestions(data.tags ?? [])
+      	}, 300)
+			}
+			catch {
+				setSuggestions([])
+			}
     } else {
       setSuggestions([])
     }
