@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Box, Input, HStack, Badge, Text } from '@yamada-ui/react'
 import { apiClient } from '@/lib/api-client'
 
@@ -19,6 +19,12 @@ export default function TagInput({ tagList, onChange }: Props) {
   const [tagInput, setTagInput] = useState('')
   const [suggestions, setSuggestions] = useState<TagSuggestion[]>([])
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+	useEffect(() => {
+  	return () => {
+    	if (debounceTimer.current) clearTimeout(debounceTimer.current)
+  	}
+	}, [])
 
   const addTag = (name: string) => {
     const trimmed = name.trim()
