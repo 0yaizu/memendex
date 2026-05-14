@@ -2,7 +2,7 @@ import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { createDb } from './db/client'
 
-export function createAuth(databaseUrl: string) {
+export function createAuth(databaseUrl: string, corsOrigin?: string) {
   const db = createDb(databaseUrl)
   return betterAuth({
     database: drizzleAdapter(db, {
@@ -11,6 +11,6 @@ export function createAuth(databaseUrl: string) {
     emailAndPassword: {
       enabled: true,
     },
-		trustedOrigins: ['http://localhost:3000'],
+		trustedOrigins: [corsOrigin ?? 'http://localhost:3000'],
   })
 }
