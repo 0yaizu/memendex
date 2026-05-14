@@ -1,6 +1,8 @@
 import { defineConfig } from 'drizzle-kit'
 import dotenv from 'dotenv'
-dotenv.config({ path: '.dev.vars' })
+
+const envFile = process.env.ENV === 'prod' ? '.env.prod' : '.dev.vars'
+dotenv.config({ path: envFile })
 
 export default defineConfig({
   schema: './src/db/schema/index.ts',
