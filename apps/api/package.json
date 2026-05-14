@@ -8,7 +8,10 @@
     "deploy": "wrangler deploy",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:migrate:prod": "ENV=prod drizzle-kit migrate",
+    "db:generate:prod": "ENV=prod drizzle-kit generate",
+    "db:studio:prod": "ENV=prod drizzle-kit studio"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260424.1",

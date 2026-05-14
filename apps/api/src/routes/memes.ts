@@ -3,6 +3,7 @@ import { createDb } from '@db/client'
 import { memes } from '@db/schema'
 import { authMiddleware } from '@src/middleware/auth'
 import { eq } from 'drizzle-orm'
+import { createAuth } from '@src/auth'
 
 type Bindings = {
   DATABASE_URL: string
@@ -82,6 +83,7 @@ memesRoute.post('/upload', authMiddleware, async (c) => {
     imageUrl: key,
     title: title,
     description: description ?? undefined,
+		visibility: 'private',
   }).returning()
 
 	return c.json({ meme }, 201)
@@ -129,6 +131,10 @@ memesRoute.get('/:id', authMiddleware, async (c) => {
 	if (!meme) {
     return c.json({ error: 'ミームが見つかりません' }, 404)
   }
+
+	if (meme.visibility === 'private') {
+		if (c.get('userId') !== meme.userId) return c.json({error: "権限がありません"}, 403)
+	}
 
 	return c.json({ meme })
 })
