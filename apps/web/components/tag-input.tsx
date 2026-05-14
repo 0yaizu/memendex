@@ -35,8 +35,8 @@ export default function TagInput({ tagList, onChange }: Props) {
     setSuggestions([])
   }
 
-  const removeTag = (index: number) => {
-    onChange(tagList.filter((_, i) => i !== index))
+  const removeTag = (tag: string) => {
+    onChange(tagList.filter((t) => t !== tag))
   }
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,8 +75,8 @@ export default function TagInput({ tagList, onChange }: Props) {
   return (
     <Box w="full" position="relative">
       <HStack flexWrap="wrap" gap="sm" mb="sm">
-        {tagList.map((tag, index) => (
-          <Badge key={index} cursor="pointer" onClick={() => removeTag(index)}>
+        {tagList.map((tag) => (
+          <Badge key={tag} cursor="pointer" onClick={() => removeTag(tag)}>
             #{tag} ×
           </Badge>
         ))}
