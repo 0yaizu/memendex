@@ -132,10 +132,8 @@ memesRoute.get('/:id', authMiddleware, async (c) => {
     return c.json({ error: 'ミームが見つかりません' }, 404)
   }
 
-	if (meme.visibility == 'private') {
-		const auth = createAuth(c.env.DATABASE_URL)
-		const session = await auth.api.getSession({ headers: c.req.raw.headers })
-		if (!session || session.user.id !== meme.userId) return c.json({ error: "権限がありません。"}, 403)
+	if (meme.visibility === 'private') {
+		if (c.get('userId') !== meme.userId) return c.json({error: "権限がありません"}, 403)
 	}
 
 	return c.json({ meme })
