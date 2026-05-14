@@ -1,8 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Box, Button, Heading, Input, Textarea, VStack, Text, Image } from '@yamada-ui/react'
+import { Box, Button, Heading, Input, Textarea, VStack, Text } from '@yamada-ui/react'
+import TagInput from '@components/tag-input'
+import ImagePreview from '@components/image-preview'
 
 export default function UploadPage() {
   const router = useRouter()
@@ -10,24 +12,9 @@ export default function UploadPage() {
   const [preview, setPreview] = useState<string | null>(null)
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const [tagList, setTagList] = useState<string[]>([])
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-
-	useEffect(() => {
-		return () => {
-			if (preview) URL.revokeObjectURL(preview)
-		}
-	}, [preview])
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files?.[0]
-    if (!selected) return
-
-		if (preview) URL.revokeObjectURL(preview)
-
-    setFile(selected)
-    setPreview(URL.createObjectURL(selected))
-  }
 
   const handleUpload = async () => {
     if (!file || !title) {
@@ -42,6 +29,7 @@ export default function UploadPage() {
     formData.append('image', file)
     formData.append('title', title)
     formData.append('description', description)
+    formData.append('tags', JSON.stringify(tagList))
 
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/memes/upload`,
@@ -67,19 +55,10 @@ export default function UploadPage() {
       <Heading mb="lg">ミームをアップロード</Heading>
       <VStack gap="md">
         {error && <Text color="danger">{error}</Text>}
-        <Input
-          type="file"
-          accept="image/jpeg,image/png,image/gif,image/webp"
-          onChange={handleFileChange}
+        <ImagePreview
+          preview={preview}
+          onChange={(f, p) => { setFile(f); setPreview(p) }}
         />
-        {preview && (
-          <Image
-            src={preview}
-            alt="プレビュー"
-            maxH="300px"
-            objectFit="contain"
-          />
-        )}
         <Input
           placeholder="タイトル（必須）"
           value={title}
@@ -90,6 +69,7 @@ export default function UploadPage() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
+        <TagInput tagList={tagList} onChange={setTagList} />
         <Button
           w="full"
           onClick={handleUpload}
