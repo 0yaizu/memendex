@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Box, Button, Heading, Input, Textarea, VStack, Text, Image } from '@yamada-ui/react'
 
@@ -13,9 +13,18 @@ export default function UploadPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
+	useEffect(() => {
+		return () => {
+			if (preview) URL.revokeObjectURL(preview)
+		}
+	}, [preview])
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0]
     if (!selected) return
+
+		if (preview) URL.revokeObjectURL(preview)
+
     setFile(selected)
     setPreview(URL.createObjectURL(selected))
   }

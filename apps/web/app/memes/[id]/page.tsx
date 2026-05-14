@@ -31,7 +31,8 @@ type Meme = {
 }
 
 export default function MemeDetailPage() {
-  const { id } = useParams()
+	const params = useParams()
+	const id = Array.isArray(params.id) ? params.id[0] : params.id
   const [meme, setMeme] = useState<Meme | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
