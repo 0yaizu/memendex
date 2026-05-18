@@ -16,13 +16,15 @@ type MemeTag = {
   tag: Tag
 }
 
+type Visibility = 'private' | 'unlisted' | 'public'
+
 type Meme = {
   id: number
   userId: string
   imageUrl: string
   title: string
   description: string | null
-  isPublic: boolean
+  visibility: Visibility
   createdAt: string
   updatedAt: string
   memeTags: MemeTag[]
