@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1777270150690,
-      "tag": "0000_premium_the_watchers",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1777523341490,
-      "tag": "0001_regular_colossus",
+      "when": 1778740704150,
+      "tag": "0000_tough_rachel_grey",
       "breakpoints": true
     }
   ]

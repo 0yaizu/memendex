@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Box, Input, HStack, Badge, Text } from '@yamada-ui/react'
 import { apiClient } from '@/lib/api-client'
 
@@ -20,6 +20,12 @@ export default function TagInput({ tagList, onChange }: Props) {
   const [suggestions, setSuggestions] = useState<TagSuggestion[]>([])
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+	useEffect(() => {
+  	return () => {
+    	if (debounceTimer.current) clearTimeout(debounceTimer.current)
+  	}
+	}, [])
+
   const addTag = (name: string) => {
     const trimmed = name.trim()
     if (trimmed && !tagList.includes(trimmed)) {
@@ -29,8 +35,8 @@ export default function TagInput({ tagList, onChange }: Props) {
     setSuggestions([])
   }
 
-  const removeTag = (index: number) => {
-    onChange(tagList.filter((_, i) => i !== index))
+  const removeTag = (tag: string) => {
+    onChange(tagList.filter((t) => t !== tag))
   }
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,11 +51,16 @@ export default function TagInput({ tagList, onChange }: Props) {
 
     if (debounceTimer.current) clearTimeout(debounceTimer.current)
     if (value.trim()) {
-      debounceTimer.current = setTimeout(async () => {
-        const res = await apiClient.get(`/api/tags/search?q=${value}`)
-        const data = await res.json()
-        setSuggestions(data.tags)
-      }, 300)
+			try {
+      	debounceTimer.current = setTimeout(async () => {
+        	const res = await apiClient.get(`/api/tags/search?q=${encodeURIComponent(value)}`)
+        	const data = await res.json()
+        	setSuggestions(data.tags ?? [])
+      	}, 300)
+			}
+			catch {
+				setSuggestions([])
+			}
     } else {
       setSuggestions([])
     }
@@ -64,8 +75,8 @@ export default function TagInput({ tagList, onChange }: Props) {
   return (
     <Box w="full" position="relative">
       <HStack flexWrap="wrap" gap="sm" mb="sm">
-        {tagList.map((tag, index) => (
-          <Badge key={index} cursor="pointer" onClick={() => removeTag(index)}>
+        {tagList.map((tag) => (
+          <Badge key={tag} cursor="pointer" onClick={() => removeTag(tag)}>
             #{tag} ×
           </Badge>
         ))}
