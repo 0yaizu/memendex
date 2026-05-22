@@ -18,20 +18,23 @@ type MemeTag = {
   tag: Tag
 }
 
+type Visibility = 'private' | 'unlisted' | 'public'
+
 type Meme = {
   id: number
   userId: string
   imageUrl: string
   title: string
   description: string | null
-  isPublic: boolean
+  visibility: Visibility
   createdAt: string
   updatedAt: string
   memeTags: MemeTag[]
 }
 
 export default function MemeDetailPage() {
-  const { id } = useParams()
+	const params = useParams()
+	const id = Array.isArray(params.id) ? params.id[0] : params.id
   const [meme, setMeme] = useState<Meme | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')

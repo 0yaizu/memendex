@@ -1,7 +1,9 @@
-import { pgTable, serial, text, boolean, timestamp, integer, primaryKey } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, timestamp, integer, primaryKey, pgEnum } from "drizzle-orm/pg-core";
 import { user } from './auth'
 import { tags } from "./tags";
 import { relations } from "drizzle-orm";
+
+export const visibilityEnum = pgEnum('visibility', ['private', 'unlisted', 'public'])
 
 export const memes = pgTable('memes', {
   id:          serial('id').primaryKey(),
@@ -9,7 +11,7 @@ export const memes = pgTable('memes', {
   imageUrl:    text('image_url').notNull(),
 	title: 		   text('title').notNull(),
   description: text('description'),
-  isPublic:    boolean('is_public').default(false).notNull(),
+  visibility:  visibilityEnum('visibility').default('private').notNull(),
   createdAt:   timestamp('created_at').defaultNow().notNull(),
   updatedAt:   timestamp('updated_at').defaultNow().notNull(),
 })

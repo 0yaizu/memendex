@@ -16,13 +16,15 @@ type MemeTag = {
   tag: Tag
 }
 
+type Visibility = 'private' | 'unlisted' | 'public'
+
 type Meme = {
   id: number
   userId: string
   imageUrl: string
   title: string
   description: string | null
-  isPublic: boolean
+  visibility: Visibility
   createdAt: string
   updatedAt: string
   memeTags: MemeTag[]
@@ -34,10 +36,16 @@ export default function GalleryPage() {
 
   useEffect(() => {
     const fetchMemes = async () => {
-      const res = await apiClient.get('/api/memes')
-      const data = await res.json()
-      setMemes(data.memes)
-      setLoading(false)
+			try {
+				const res = await apiClient.get('/api/memes')
+				if (!res.ok) return
+				const data = await res.json()
+				setMemes(data.memes)
+			} catch (e) {
+				console.error(e)
+			} finally {
+				setLoading(false)
+			}
     }
     fetchMemes()
   }, [])

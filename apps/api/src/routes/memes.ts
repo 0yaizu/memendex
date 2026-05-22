@@ -84,6 +84,7 @@ memesRoute.post('/upload', authMiddleware, async (c) => {
     imageUrl: key,
     title: title,
     description: description ?? undefined,
+		visibility: 'private',
   }).returning()
 
 	if (!meme) return c.json({ error: 'ミームの保存に失敗しました' }, 500)
@@ -149,6 +150,10 @@ memesRoute.get('/:id', authMiddleware, async (c) => {
     return c.json({ error: 'ミームが見つかりません' }, 404)
   }
 
+	if (meme.visibility === 'private') {
+		if (c.get('userId') !== meme.userId) return c.json({error: "権限がありません"}, 403)
+	}
+
 	return c.json({ meme })
 })
 
@@ -160,7 +165,17 @@ memesRoute.patch('/:id', authMiddleware, async (c) => {
     return c.json({ error: '無効なIDです' }, 400)
   }
 
-  const { title, description } = await c.req.json()
+  let body: { title?: string; description?: string }
+	try {
+  	body = await c.req.json()
+	} catch {
+  	return c.json({ error: '無効なリクエストです' }, 400)
+	}
+	const { title, description } = body
+
+	if (!title || typeof title !== 'string' || title.trim() === '') {
+		return c.json({ error: 'タイトルは必須です' }, 400)
+	}
 
   const db = createDb(c.env.DATABASE_URL)
 
@@ -168,7 +183,7 @@ memesRoute.patch('/:id', authMiddleware, async (c) => {
     .update(memes)
     .set({
       title,
-      description: description ?? undefined,
+      description: description !== undefined ? description : undefined,
       updatedAt: new Date(),
     })
     .where(and(eq(memes.id, id), eq(memes.userId, userId)))
