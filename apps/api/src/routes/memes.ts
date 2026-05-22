@@ -3,7 +3,6 @@ import { createDb } from '@db/client'
 import { memes, memeTags, tags } from '@db/schema'
 import { authMiddleware } from '@src/middleware/auth'
 import { and, eq } from 'drizzle-orm'
-import { createAuth } from '@src/auth'
 
 type Bindings = {
   DATABASE_URL: string
