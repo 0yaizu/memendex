@@ -168,6 +168,10 @@ memesRoute.patch('/:id', authMiddleware, async (c) => {
 
   const { title, description } = await c.req.json()
 
+	if (!title || typeof title !== 'string' || title.trim() === '') {
+		return c.json({ error: 'タイトルは必須です' }, 400)
+	}
+
   const db = createDb(c.env.DATABASE_URL)
 
   const [meme] = await db
