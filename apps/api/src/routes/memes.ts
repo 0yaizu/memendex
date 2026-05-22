@@ -184,7 +184,7 @@ memesRoute.patch('/:id', authMiddleware, async (c) => {
     .update(memes)
     .set({
       title,
-      description: description ?? undefined,
+      description: description !== undefined ? description : undefined,
       updatedAt: new Date(),
     })
     .where(and(eq(memes.id, id), eq(memes.userId, userId)))
