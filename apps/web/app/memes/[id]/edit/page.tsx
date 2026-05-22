@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { apiClient } from '@/lib/api-client'
-import { Box, Button, Heading, Input, Textarea, VStack, Text, Center, HStack, Image } from '@yamada-ui/react'
+import { Box, Button, Heading, Input, Textarea, VStack, Text, Center, HStack } from '@yamada-ui/react'
 import { Loading } from '@yamada-ui/react'
 import TagInput from '@components/tag-input'
 import ImagePreview from '@components/image-preview'
