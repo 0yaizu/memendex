@@ -2,8 +2,7 @@ import { Hono } from 'hono'
 import { createDb } from '@db/client'
 import { memes, memeTags, tags } from '@db/schema'
 import { authMiddleware } from '@src/middleware/auth'
-import { eq } from 'drizzle-orm'
-import { createAuth } from '@src/auth'
+import { and, eq } from 'drizzle-orm'
 
 type Bindings = {
   DATABASE_URL: string
@@ -156,6 +155,45 @@ memesRoute.get('/:id', authMiddleware, async (c) => {
 	}
 
 	return c.json({ meme })
+})
+
+memesRoute.patch('/:id', authMiddleware, async (c) => {
+  const id = Number(c.req.param('id'))
+  const userId = c.get('userId')
+
+  if (isNaN(id)) {
+    return c.json({ error: '無効なIDです' }, 400)
+  }
+
+  let body: { title?: string; description?: string }
+	try {
+  	body = await c.req.json()
+	} catch {
+  	return c.json({ error: '無効なリクエストです' }, 400)
+	}
+	const { title, description } = body
+
+	if (!title || typeof title !== 'string' || title.trim() === '') {
+		return c.json({ error: 'タイトルは必須です' }, 400)
+	}
+
+  const db = createDb(c.env.DATABASE_URL)
+
+  const [meme] = await db
+    .update(memes)
+    .set({
+      title,
+      description: description !== undefined ? description : undefined,
+      updatedAt: new Date(),
+    })
+    .where(and(eq(memes.id, id), eq(memes.userId, userId)))
+    .returning()
+
+  if (!meme) {
+    return c.json({ error: 'ミームが見つかりません' }, 404)
+  }
+
+  return c.json({ meme })
 })
 
 export default memesRoute
