@@ -166,7 +166,13 @@ memesRoute.patch('/:id', authMiddleware, async (c) => {
     return c.json({ error: '無効なIDです' }, 400)
   }
 
-  const { title, description } = await c.req.json()
+  let body: { title?: string; description?: string }
+	try {
+  	body = await c.req.json()
+	} catch {
+  	return c.json({ error: '無効なリクエストです' }, 400)
+	}
+	const { title, description } = body
 
 	if (!title || typeof title !== 'string' || title.trim() === '') {
 		return c.json({ error: 'タイトルは必須です' }, 400)
