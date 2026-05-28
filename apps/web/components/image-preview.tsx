@@ -5,10 +5,11 @@ import { useEffect, useState } from 'react'
 
 type Props = {
   preview: string | null
-  onChange: (file: File, preview: string) => void
+  onChange?: (file: File, preview: string) => void
+  readOnly?: boolean
 }
 
-export default function ImagePreview({ preview, onChange }: Props) {
+export default function ImagePreview({ preview, onChange, readOnly = false }: Props) {
 	const [objectUrl, setObjectUrl] = useState<string | null>(null)
 
 	useEffect(() => {
@@ -19,7 +20,7 @@ export default function ImagePreview({ preview, onChange }: Props) {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0]
-    if (!selected) return
+    if (!selected || !onChange) return
 
 		if (objectUrl) URL.revokeObjectURL(objectUrl)
 
@@ -30,18 +31,21 @@ export default function ImagePreview({ preview, onChange }: Props) {
 
   return (
     <Box w="full">
-      <Input
-        type="file"
-        accept="image/jpeg,image/png,image/gif,image/webp"
-        onChange={handleFileChange}
-      />
+      {!readOnly && (
+        <Input
+          type="file"
+          accept="image/jpeg,image/png,image/gif,image/webp"
+          onChange={handleFileChange}
+        />
+      )}
       {preview && (
         <Image
           src={preview}
           alt="プレビュー"
-          maxH="300px"
+					w="full"
+          maxH="400px"
           objectFit="contain"
-          mt="sm"
+          mt={readOnly ? '0' : 'sm'}
         />
       )}
     </Box>
