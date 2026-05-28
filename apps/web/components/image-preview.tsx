@@ -42,7 +42,8 @@ export default function ImagePreview({ preview, onChange, readOnly = false }: Pr
         <Image
           src={preview}
           alt="プレビュー"
-          maxH="300px"
+					w="full"
+          maxH="400px"
           objectFit="contain"
           mt={readOnly ? '0' : 'sm'}
         />

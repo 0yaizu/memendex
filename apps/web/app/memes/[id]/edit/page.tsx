@@ -145,11 +145,11 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
         <Heading>ミームを編集</Heading>
         <Button variant="ghost" onClick={() => router.back()}>戻る</Button>
       </HStack>
-			<ImagePreview
-				preview={`${process.env.NEXT_PUBLIC_API_URL}/api/memes/image/${meme?.imageUrl}`}
-				readOnly
-			/>
       <VStack gap="md">
+				<ImagePreview
+					preview={`${process.env.NEXT_PUBLIC_API_URL}/api/memes/image/${meme?.imageUrl}`}
+					readOnly
+				/>
         {error && <Text color="danger">{error}</Text>}
         <Input
           placeholder="タイトル（必須）"
