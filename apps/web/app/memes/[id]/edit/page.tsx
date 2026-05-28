@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { apiClient } from '@/lib/api-client'
-import { Box, Button, Heading, Input, Textarea, VStack, Text, Center, HStack } from '@yamada-ui/react'
-import { Loading } from '@yamada-ui/react'
+import { Box, Button, Heading, Input, Textarea, VStack, Text, Center, HStack, Loading } from '@yamada-ui/react'
 import TagInput from '@components/tag-input'
 import ImagePreview from '@components/image-preview'
 
@@ -83,7 +82,6 @@ export default function EditPage({ params }: { params: { id: string } }) {
     if (!res.ok) {
       const data = await res.json()
       setError(data.error ?? '更新に失敗しました')
-      setSaving(false)
       return
     }
 
@@ -98,7 +96,6 @@ export default function EditPage({ params }: { params: { id: string } }) {
 				if (!res.ok) {
 					const data = await res.json()
 					setError(data.error ?? `タグ「${name}」の追加に失敗しました`)
-					setSaving(false)
 					return
 				}
 			}
