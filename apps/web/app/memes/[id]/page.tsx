@@ -7,6 +7,7 @@ import { Box, Heading, Text, VStack, HStack, Badge, Image, Center, Button } from
 import { Loading } from '@yamada-ui/react'
 import Link from 'next/link'
 import ImagePreview from '@components/image-preview'
+import { getMemeImageUrl } from '@lib/meme'
 
 type Tag = {
   id: number
@@ -80,10 +81,7 @@ export default function MemeDetailPage() {
             <Button variant="ghost">戻る</Button>
           </Link>
         </HStack>
-        <ImagePreview
-					preview={`${process.env.NEXT_PUBLIC_API_URL}/api/memes/image/${meme?.imageUrl}`}
-					readOnly
-				/>
+        <ImagePreview src={getMemeImageUrl(meme.imageUrl)} />
         {meme.description && (
           <Text>{meme.description}</Text>
         )}
