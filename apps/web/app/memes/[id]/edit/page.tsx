@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { apiClient } from '@/lib/api-client'
 import { Box, Button, Heading, Input, Textarea, VStack, Text, Center, HStack, Loading } from '@yamada-ui/react'
@@ -32,8 +32,8 @@ type Meme = {
   memeTags: MemeTag[]
 }
 
-export default function EditPage({ params }: { params: { id: string } }) {
-  const { id } = params
+export default function EditPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const router = useRouter()
   const [meme, setMeme] = useState<Meme | null>(null)
   const [title, setTitle] = useState('')
