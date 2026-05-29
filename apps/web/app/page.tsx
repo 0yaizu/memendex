@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { apiClient } from '@lib/api-client'
-import { Box, Grid, Image, Text, VStack, Heading, Center, Loading } from '@yamada-ui/react'
-import Link from 'next/link'
+import { Box, Grid, Image, Text, VStack, Heading, Center, Loading, Link } from '@yamada-ui/react'
 
 type Tag = {
   id: number
