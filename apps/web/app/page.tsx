@@ -63,7 +63,7 @@ export default function GalleryPage() {
 				<Text>
 					まだミームがありません
 					<br/>
-					<Link href="/upload" style={{ color: 'blue', textDecoration: 'underline' }}>
+					<Link href="/upload" color="blue.700">
 						アップロードしてみましょう
 					</Link>
 				</Text>

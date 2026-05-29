@@ -98,9 +98,9 @@ export default function MemeDetailPage() {
           {new Date(meme.createdAt).toLocaleDateString('ja-JP')}
         </Text>
 				{session?.user.id === meme.userId && (
-					<Link href={`/memes/${id}/edit`}>
-						<Button padding="sm">編集</Button>
-					</Link>
+					<Button padding="sm">
+						<Link href={`/memes/${id}/edit`}>編集</Link>
+					</Button>
 				)}
       </VStack>
     </Box>
