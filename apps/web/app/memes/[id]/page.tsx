@@ -3,9 +3,11 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { apiClient } from '@/lib/api-client'
-import { Box, Heading, Text, VStack, HStack, Badge, Image, Center, Button } from '@yamada-ui/react'
+import { Box, Heading, Text, VStack, HStack, Badge, Center, Button } from '@yamada-ui/react'
 import { Loading } from '@yamada-ui/react'
 import Link from 'next/link'
+import ImagePreview from '@components/image-preview'
+import { getMemeImageUrl } from '@lib/meme'
 
 type Tag = {
   id: number
@@ -79,13 +81,7 @@ export default function MemeDetailPage() {
             <Button variant="ghost">戻る</Button>
           </Link>
         </HStack>
-        <Image
-          src={`${process.env.NEXT_PUBLIC_API_URL}/api/memes/image/${meme.imageUrl}`}
-          alt={meme.title}
-          maxH="500px"
-          objectFit="contain"
-          borderRadius="md"
-        />
+        <ImagePreview src={getMemeImageUrl(meme.imageUrl)} />
         {meme.description && (
           <Text>{meme.description}</Text>
         )}

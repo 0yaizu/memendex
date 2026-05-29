@@ -1,11 +1,12 @@
 'use client'
 
 import { use, useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { notFound, useRouter } from 'next/navigation'
 import { apiClient } from '@/lib/api-client'
 import { Box, Button, Heading, Input, Textarea, VStack, Text, Center, HStack, Loading } from '@yamada-ui/react'
 import TagInput from '@components/tag-input'
 import ImagePreview from '@components/image-preview'
+import { getMemeImageUrl } from '@lib/meme'
 
 type Tag = {
   id: number
@@ -139,6 +140,8 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
     )
   }
 
+	if (!meme) notFound()
+
   return (
     <Box p="lg" maxW="600px" mx="auto">
       <HStack justifyContent="space-between" mb="lg">
@@ -146,10 +149,7 @@ export default function EditPage({ params }: { params: Promise<{ id: string }> }
         <Button variant="ghost" onClick={() => router.back()}>戻る</Button>
       </HStack>
       <VStack gap="md">
-				<ImagePreview
-					preview={`${process.env.NEXT_PUBLIC_API_URL}/api/memes/image/${meme?.imageUrl}`}
-					readOnly
-				/>
+				<ImagePreview src={getMemeImageUrl(meme.imageUrl)} />
         {error && <Text color="danger">{error}</Text>}
         <Input
           placeholder="タイトル（必須）"
