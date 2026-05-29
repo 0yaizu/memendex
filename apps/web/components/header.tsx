@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
-import { Box, Heading, HStack, Button } from '@yamada-ui/react'
+import { Box, Heading, HStack, Button, Link } from '@yamada-ui/react'
 
 export default function Header() {
   const router = useRouter()
@@ -16,11 +16,14 @@ export default function Header() {
   return (
     <Box as="header" px="lg" py="md" borderBottomWidth="1px">
       <HStack justifyContent="space-between">
-        <Heading size="md">Memendex</Heading>
+        <Link href="/">
+					<Heading size="md">Memendex</Heading>
+				</Link>
         {session && (
-          <Button onClick={handleSignOut} variant="ghost">
-            サインアウト
-          </Button>
+					<HStack gap="sm">
+						<Button padding="sm" onClick={() => router.push('/upload')} variant="ghost">アップロード</Button>
+						<Button padding="sm" onClick={handleSignOut}>サインアウト</Button>
+					</HStack>
         )}
       </HStack>
     </Box>

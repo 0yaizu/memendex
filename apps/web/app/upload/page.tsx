@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Box, Button, Heading, Input, Textarea, VStack, Text } from '@yamada-ui/react'
+import { Box, Button, Heading, Input, Textarea, VStack, Text, HStack } from '@yamada-ui/react'
 import TagInput from '@components/tag-input'
 import ImageInput from '@components/image-input'
 
@@ -51,7 +51,10 @@ export default function UploadPage() {
 
   return (
     <Box p="lg" maxW="600px" mx="auto">
-      <Heading mb="lg">ミームをアップロード</Heading>
+			<HStack justifyContent="space-between" alignItems="center" mb="lg">
+				<Heading>ミームをアップロード</Heading>
+				<Button onClick={() => router.back()} variant="ghost">キャンセル</Button>
+			</HStack>
       <VStack gap="md">
         {error && <Text color="danger">{error}</Text>}
 				<ImageInput onChange={(f) => setFile(f)} />

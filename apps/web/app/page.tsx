@@ -60,11 +60,17 @@ export default function GalleryPage() {
 
   if (memes.length === 0) {
     return (
-      <Center minH="50vh">
-        <Text>まだミームがありません</Text>
-      </Center>
-    )
-  }
+      <Center minH="50vh" justifyContent="center" textAlign="center">
+				<Text>
+					まだミームがありません
+					<br/>
+					<Link href="/upload" style={{ color: 'blue', textDecoration: 'underline' }}>
+						アップロードしてみましょう
+					</Link>
+				</Text>
+			</Center>
+		)
+	}
 
   return (
     <Box p="lg">
