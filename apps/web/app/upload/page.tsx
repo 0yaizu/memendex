@@ -54,7 +54,7 @@ export default function UploadPage() {
       <Heading mb="lg">ミームをアップロード</Heading>
       <VStack gap="md">
         {error && <Text color="danger">{error}</Text>}
-				<ImageInput onChange={(f, p) => { setFile(f); setPreview(p) }} />
+				<ImageInput onChange={(f) => setFile(f)} />
         <Input
           placeholder="タイトル（必須）"
           value={title}
