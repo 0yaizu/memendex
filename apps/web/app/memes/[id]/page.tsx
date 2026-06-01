@@ -1,13 +1,13 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { apiClient } from '@/lib/api-client'
-import { Box, Heading, Text, VStack, HStack, Badge, Center, Button } from '@yamada-ui/react'
+import { Box, Heading, Text, VStack, HStack, Badge, Center, Button, Link } from '@yamada-ui/react'
 import { Loading } from '@yamada-ui/react'
-import Link from 'next/link'
 import ImagePreview from '@components/image-preview'
 import { getMemeImageUrl } from '@lib/meme'
+import { authClient } from '@lib/auth-client'
 
 type Tag = {
   id: number
@@ -35,6 +35,8 @@ type Meme = {
 }
 
 export default function MemeDetailPage() {
+	const router = useRouter()
+	const { data: session } = authClient.useSession()
 	const params = useParams()
 	const id = Array.isArray(params.id) ? params.id[0] : params.id
   const [meme, setMeme] = useState<Meme | null>(null)
@@ -75,11 +77,9 @@ export default function MemeDetailPage() {
   return (
     <Box p="lg" maxW="800px" mx="auto">
       <VStack gap="lg" alignItems="flex-start">
-        <HStack justifyContent="space-between" w="full">
+        <HStack justifyContent="space-between" w="full" gap="lg">
           <Heading>{meme.title}</Heading>
-          <Link href="/">
-            <Button variant="ghost">戻る</Button>
-          </Link>
+          <Button onClick={() => router.back()} variant="ghost">戻る</Button>
         </HStack>
         <ImagePreview src={getMemeImageUrl(meme.imageUrl)} />
         {meme.description && (
@@ -97,6 +97,11 @@ export default function MemeDetailPage() {
         <Text fontSize="xs" color="gray.500">
           {new Date(meme.createdAt).toLocaleDateString('ja-JP')}
         </Text>
+				{session?.user.id === meme.userId && (
+					<Button padding="sm">
+						<Link href={`/memes/${id}/edit`}>編集</Link>
+					</Button>
+				)}
       </VStack>
     </Box>
   )
