@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
-import { Center, VStack, Input, Button, Heading, Text, Link } from '@yamada-ui/react'
+import { Center, VStack, Input, Button, Heading, Text } from '@yamada-ui/react'
+import NextLink from 'next/link'
 
 export default function SignInPage() {
   const router = useRouter()
@@ -45,7 +46,9 @@ export default function SignInPage() {
         <Button w="full" onClick={handleSignIn}>
           サインイン
         </Button>
-        <Link href="/sign-up">アカウントを作成する</Link>
+        <NextLink href="/sign-up" color="blue.700">
+          アカウントを作成する
+        </NextLink>
       </VStack>
     </Center>
   )

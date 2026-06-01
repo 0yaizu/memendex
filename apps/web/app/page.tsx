@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import useSWR from 'swr'
 import { apiClient } from '@lib/api-client'
-import { Box, Grid, Image, Text, VStack, Heading, Center, Loading, Link } from '@yamada-ui/react'
+import { Box, Grid, Image, Text, VStack, Heading, Center, Loading } from '@yamada-ui/react'
+import NextLink from 'next/link'
 
 type Tag = {
   id: number
@@ -29,27 +30,20 @@ type Meme = {
   memeTags: MemeTag[]
 }
 
+const fetcher = async (url: string): Promise<Meme[]> => {
+	const res = await apiClient.get(url)
+	if (!res.ok) throw new Error('Failed to fetch memes')
+	const data = await res.json()
+	return data.memes
+}
+
 export default function GalleryPage() {
-  const [memes, setMemes] = useState<Meme[]>([])
-  const [loading, setLoading] = useState(true)
+	const { data: memes, isLoading } = useSWR<Meme[]>('/api/memes', fetcher, {
+		revalidateOnFocus: true,  // タブ復帰時の再取得（visibilitychange の代替）
+		keepPreviousData: true,   // 再取得中もキャッシュデータを表示し続ける
+	})
 
-  useEffect(() => {
-    const fetchMemes = async () => {
-			try {
-				const res = await apiClient.get('/api/memes')
-				if (!res.ok) return
-				const data = await res.json()
-				setMemes(data.memes)
-			} catch (e) {
-				console.error(e)
-			} finally {
-				setLoading(false)
-			}
-    }
-    fetchMemes()
-  }, [])
-
-  if (loading) {
+  if (isLoading) {
     return (
       <Center minH="50vh">
         <Loading.Dots />
@@ -57,15 +51,15 @@ export default function GalleryPage() {
     )
   }
 
-  if (memes.length === 0) {
+  if (!memes || memes.length === 0) {
     return (
       <Center minH="50vh" justifyContent="center" textAlign="center">
 				<Text>
 					まだミームがありません
 					<br/>
-					<Link href="/upload" color="blue.700">
+					<NextLink href="/upload" color="blue.700">
 						アップロードしてみましょう
-					</Link>
+					</NextLink>
 				</Text>
 			</Center>
 		)
@@ -76,7 +70,7 @@ export default function GalleryPage() {
       <Heading mb="lg">ギャラリー</Heading>
       <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap="md">
         {memes.map((meme) => (
-          <Link key={meme.id} href={`/memes/${meme.id}`}>
+          <NextLink key={meme.id} href={`/memes/${meme.id}`}>
             <VStack
               borderWidth="1px"
               borderRadius="md"
@@ -100,7 +94,7 @@ export default function GalleryPage() {
                 )}
               </Box>
             </VStack>
-          </Link>
+          </NextLink>
         ))}
       </Grid>
     </Box>
