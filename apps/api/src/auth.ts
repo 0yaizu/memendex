@@ -5,6 +5,7 @@ import { createDb } from './db/client'
 export type AuthEnv = {
 	DATABASE_URL: string
 	CORS_ORIGIN?: string
+	API_URL?: string
 	GOOGLE_CLIENT_ID: string
 	GOOGLE_CLIENT_SECRET: string
 	EMAIL_AUTH_ENABLED?: string
@@ -13,6 +14,7 @@ export type AuthEnv = {
 export function createAuth(env: AuthEnv) {
   const db = createDb(env.DATABASE_URL)
   return betterAuth({
+		baseURL: env.API_URL ?? 'http://localhost:8787',
     database: drizzleAdapter(db, {
       provider: 'pg',
     }),
