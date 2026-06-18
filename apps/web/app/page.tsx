@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { apiClient } from '@lib/api-client'
-import { Box, Grid, Image, Text, VStack, Heading, Center, Loading } from '@yamada-ui/react'
-import Link from 'next/link'
+import { Box, Grid, Image, Text, VStack, Heading, Center, Loading, Link } from '@yamada-ui/react'
 
 type Tag = {
   id: number
@@ -16,13 +15,15 @@ type MemeTag = {
   tag: Tag
 }
 
+type Visibility = 'private' | 'unlisted' | 'public'
+
 type Meme = {
   id: number
   userId: string
   imageUrl: string
   title: string
   description: string | null
-  isPublic: boolean
+  visibility: Visibility
   createdAt: string
   updatedAt: string
   memeTags: MemeTag[]
@@ -58,11 +59,17 @@ export default function GalleryPage() {
 
   if (memes.length === 0) {
     return (
-      <Center minH="50vh">
-        <Text>まだミームがありません</Text>
-      </Center>
-    )
-  }
+      <Center minH="50vh" justifyContent="center" textAlign="center">
+				<Text>
+					まだミームがありません
+					<br/>
+					<Link href="/upload" color="blue.700">
+						アップロードしてみましょう
+					</Link>
+				</Text>
+			</Center>
+		)
+	}
 
   return (
     <Box p="lg">

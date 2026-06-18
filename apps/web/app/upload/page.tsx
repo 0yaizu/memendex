@@ -2,14 +2,13 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Box, Button, Heading, Input, Textarea, VStack, Text } from '@yamada-ui/react'
+import { Box, Button, Heading, Input, Textarea, VStack, Text, HStack } from '@yamada-ui/react'
 import TagInput from '@components/tag-input'
-import ImagePreview from '@components/image-preview'
+import ImageInput from '@components/image-input'
 
 export default function UploadPage() {
   const router = useRouter()
   const [file, setFile] = useState<File | null>(null)
-  const [preview, setPreview] = useState<string | null>(null)
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [tagList, setTagList] = useState<string[]>([])
@@ -52,13 +51,13 @@ export default function UploadPage() {
 
   return (
     <Box p="lg" maxW="600px" mx="auto">
-      <Heading mb="lg">ミームをアップロード</Heading>
+			<HStack justifyContent="space-between" alignItems="center" mb="lg">
+				<Heading>ミームをアップロード</Heading>
+				<Button onClick={() => router.back()} variant="ghost">キャンセル</Button>
+			</HStack>
       <VStack gap="md">
         {error && <Text color="danger">{error}</Text>}
-        <ImagePreview
-          preview={preview}
-          onChange={(f, p) => { setFile(f); setPreview(p) }}
-        />
+				<ImageInput onChange={(f) => setFile(f)} />
         <Input
           placeholder="タイトル（必須）"
           value={title}

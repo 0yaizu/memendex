@@ -21,4 +21,25 @@ export const apiClient = {
       },
       body: body ? JSON.stringify(body) : undefined,
     }),
+	patch: (path: string, body?: unknown, init?: RequestInit) =>
+		fetch(`${API_URL}${path}`, {
+			...init,
+			method: 'PATCH',
+			credentials: 'include',
+			headers: {
+				'Content-Type': 'application/json',
+				...init?.headers,
+			},
+			body: body ? JSON.stringify(body) : undefined,
+		}),
+	delete: (path: string, init?: RequestInit) =>
+		fetch(`${API_URL}${path}`, {
+			...init,
+			method: 'DELETE',
+			credentials: 'include',
+			headers: {
+				'Content-Type': 'application/json',
+				...init?.headers,
+			},
+		}),
 }
