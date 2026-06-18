@@ -5,6 +5,8 @@ type Bindings = {
   DATABASE_URL: string
 	GOOGLE_CLIENT_ID: string
 	GOOGLE_CLIENT_SECRET: string
+	TWITTER_CLIENT_ID: string
+	TWITTER_CLIENT_SECRET: string
 }
 
 type Variables = {

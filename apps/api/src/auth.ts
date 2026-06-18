@@ -8,11 +8,13 @@ export type AuthEnv = {
 	API_URL?: string
 	GOOGLE_CLIENT_ID: string
 	GOOGLE_CLIENT_SECRET: string
+	TWITTER_CLIENT_ID: string
+	TWITTER_CLIENT_SECRET: string
 	EMAIL_AUTH_ENABLED?: string
 }
 
 export function createAuth(env: AuthEnv) {
-  const db = createDb(env.DATABASE_URL)
+const db = createDb(env.DATABASE_URL)
   return betterAuth({
 		baseURL: env.API_URL ?? 'http://localhost:8787',
     database: drizzleAdapter(db, {
@@ -25,7 +27,10 @@ export function createAuth(env: AuthEnv) {
 			google: {
 				clientId: env.GOOGLE_CLIENT_ID,
 				clientSecret: env.GOOGLE_CLIENT_SECRET
-				,
+			},
+			twitter: {
+				clientId: env.TWITTER_CLIENT_ID,
+				clientSecret: env.TWITTER_CLIENT_SECRET
 			}
 		},
 		trustedOrigins: [env.CORS_ORIGIN ?? 'http://localhost:3000'],
