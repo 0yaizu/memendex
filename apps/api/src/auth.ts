@@ -7,6 +7,7 @@ export type AuthEnv = {
 	CORS_ORIGIN?: string
 	GOOGLE_CLIENT_ID: string
 	GOOGLE_CLIENT_SECRET: string
+	EMAIL_AUTH_ENABLED?: string
 }
 
 export function createAuth(env: AuthEnv) {
@@ -16,7 +17,7 @@ export function createAuth(env: AuthEnv) {
       provider: 'pg',
     }),
     emailAndPassword: {
-      enabled: true,
+      enabled: env.EMAIL_AUTH_ENABLED === 'true',
     },
 		socialProviders: {
 			google: {
