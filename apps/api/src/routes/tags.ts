@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { createDb } from '../db/client'
-import { tags, memeTags } from '../db/schema'
+import { tags, memeTags, memes } from '../db/schema'
 import { eq, and, sql } from 'drizzle-orm'
 import { authMiddleware } from '../middleware/auth'
 
@@ -19,7 +19,17 @@ tagsRoute.post('/memes/:memeId/tags', authMiddleware, async (c) => {
     return c.json({ error: 'memeIdとタグ名は必須です' }, 400)
   }
 
+	const userId = c.get('userId')
   const db = createDb(c.env.DATABASE_URL)
+
+	const [meme] = await db
+		.select()
+		.from(memes)
+		.where(and(eq(memes.id, memeId), eq(memes.userId, userId)))
+
+	if (!meme) {
+    return c.json({ error: '403 Forbidden' }, 403)
+  }
 
   // タグが存在しなければ作成、あればそのIDを使う
   const [tag] = await db
@@ -49,8 +59,17 @@ tagsRoute.delete('/memes/:memeId/tags/:tagId', authMiddleware, async (c) => {
   if (isNaN(memeId) || isNaN(tagId)) {
     return c.json({ error: '無効なIDです' }, 400)
   }
-
+	const userId = c.get('userId')
   const db = createDb(c.env.DATABASE_URL)
+
+	const [meme] = await db
+		.select()
+		.from(memes)
+		.where(and(eq(memes.id, memeId), eq(memes.userId, userId)))
+
+	if (!meme) {
+    return c.json({ error: '403 Forbidden' }, 403)
+  }
 
   await db
     .delete(memeTags)
