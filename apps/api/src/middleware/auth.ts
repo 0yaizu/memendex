@@ -3,6 +3,8 @@ import { createAuth } from '../auth'
 
 type Bindings = {
   DATABASE_URL: string
+	GOOGLE_CLIENT_ID: string
+	GOOGLE_CLIENT_SECRET: string
 }
 
 type Variables = {
@@ -13,7 +15,7 @@ export const authMiddleware = createMiddleware<{
   Bindings: Bindings
   Variables: Variables
 }>(async (c, next) => {
-  const auth = createAuth(c.env.DATABASE_URL)
+  const auth = createAuth(c.env)
   const session = await auth.api.getSession({
     headers: c.req.raw.headers,
   })

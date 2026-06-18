@@ -7,6 +7,8 @@ import tagsRoute from './routes/tags'
 type Bindings = {
   DATABASE_URL: string
 	CORS_ORIGIN: string
+	GOOGLE_CLIENT_ID: string
+	GOOGLE_CLIENT_SECRET: string
 	memendex_images: R2Bucket
 }
 
@@ -23,7 +25,7 @@ app.use('*', (c, next) => {
 })
 
 app.on(['GET', 'POST'], '/api/auth/*', (c) => {
-  const auth = createAuth(c.env.DATABASE_URL)
+  const auth = createAuth(c.env)
   return auth.handler(c.req.raw)
 })
 
