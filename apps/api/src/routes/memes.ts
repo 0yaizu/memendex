@@ -20,7 +20,7 @@ memesRoute.get('/image/:userId/:filename', async (c) => {
 	const object = await c.env.memendex_images.get(key)
 
 	if (!object) {
-		return c.json({ error: '画像が見つかりません'}, 401)
+		return c.json({ error: '画像が見つかりません'}, 404)
 	}
 
 	return new Response(object.body, {
@@ -151,7 +151,7 @@ memesRoute.get('/:id', authMiddleware, async (c) => {
   }
 
 	if (meme.visibility === 'private') {
-		if (c.get('userId') !== meme.userId) return c.json({error: "権限がありません"}, 403)
+		if (c.get('userId') !== meme.userId) return c.json({error: 'ミームが見つかりません'}, 404)
 	}
 
 	return c.json({ meme })
