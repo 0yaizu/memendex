@@ -8,6 +8,8 @@ export type AuthEnv = {
 	API_URL?: string
 	GOOGLE_CLIENT_ID: string
 	GOOGLE_CLIENT_SECRET: string
+	DISCORD_CLIENT_ID: string
+	DISCORD_CLIENT_SECRET: string
 	EMAIL_AUTH_ENABLED?: string
 }
 
@@ -24,9 +26,12 @@ export function createAuth(env: AuthEnv) {
 		socialProviders: {
 			google: {
 				clientId: env.GOOGLE_CLIENT_ID,
-				clientSecret: env.GOOGLE_CLIENT_SECRET
-				,
-			}
+				clientSecret: env.GOOGLE_CLIENT_SECRET,
+			},
+			discord: {
+				clientId: env.DISCORD_CLIENT_ID,
+				clientSecret: env.DISCORD_CLIENT_SECRET,
+			},
 		},
 		trustedOrigins: [env.CORS_ORIGIN ?? 'http://localhost:3000'],
   })

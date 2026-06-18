@@ -34,6 +34,13 @@ export default function SignInPage() {
 		})
 	}
 
+	const handleDiscordSignIn = async () => {
+		await authClient.signIn.social({
+			provider: 'discord',
+			callbackURL: `${window.location.origin}/`
+		})
+	}
+
   return (
     <Center minH="100vh">
       <VStack w="sm" gap="md">
@@ -61,6 +68,9 @@ export default function SignInPage() {
         )}
         <Button w="full" variant="outline" onClick={handleGoogleSignIn}>
           Googleでサインイン
+        </Button>
+        <Button w="full" variant="outline" onClick={handleDiscordSignIn}>
+          Discordでサインイン
         </Button>
       </VStack>
     </Center>
