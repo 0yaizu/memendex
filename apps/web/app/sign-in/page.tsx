@@ -30,7 +30,7 @@ export default function SignInPage() {
 	const handleGoogleSignIn = async () => {
 		await authClient.signIn.social({
 			provider: 'google',
-			callbackURL: '/'
+			callbackURL: `${window.location.origin}/`
 		})
 	}
 
