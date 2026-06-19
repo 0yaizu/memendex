@@ -1,9 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
 import { Center, VStack, Input, Button, Heading, Text } from '@yamada-ui/react'
+
+type Providers = {
+	email: boolean
+	google: boolean
+	twitter: boolean
+}
 
 const emailAuthEnabled = process.env.NEXT_PUBLIC_EMAIL_AUTH_ENABLED === 'true'
 
@@ -12,6 +18,14 @@ export default function SignInPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+	const [providers, setProviders] = useState<Providers | null>(null)
+
+	useEffect(() => {
+		fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/providers`, { credentials: 'include' })
+			.then((res) => res.json())
+			.then((data) => setProviders(data))
+			.catch(() => setProviders({ email: false, google: false, twitter: false }))
+	}, [])
 
   const handleSignIn = async () => {
     const { error } = await authClient.signIn.email({
@@ -63,12 +77,16 @@ export default function SignInPage() {
         <Heading>サインイン</Heading>
         {error && <Text color="danger">{error}</Text>}
         {emailAuthEnabled && emailInputForm}
-        <Button w="full" variant="outline" onClick={() => handleSocialSignIn('google')}>
-          Googleでサインイン
-        </Button>
-        <Button w="full" variant="outline" onClick={() => handleSocialSignIn('twitter')}>
-          Xでサインイン
-        </Button>
+        {providers?.google && (
+          <Button w="full" variant="outline" onClick={() => handleSocialSignIn('google')}>
+            Googleでサインイン
+          </Button>
+        )}
+        {providers?.twitter && (
+          <Button w="full" variant="outline" onClick={() => handleSocialSignIn('twitter')}>
+            Xでサインイン
+          </Button>
+        )}
       </VStack>
     </Center>
   )

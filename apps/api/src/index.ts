@@ -5,12 +5,15 @@ import memesRoute from './routes/memes'
 import tagsRoute from './routes/tags'
 
 type Bindings = {
-  DATABASE_URL: string
-	CORS_ORIGIN: string
-	GOOGLE_CLIENT_ID: string
-	GOOGLE_CLIENT_SECRET: string
-	TWITTER_CLIENT_ID: string
-	TWITTER_CLIENT_SECRET: string
+	DATABASE_URL: string
+	CORS_ORIGIN?: string
+	GOOGLE_CLIENT_ID?: string
+	GOOGLE_CLIENT_SECRET?: string
+	GOOGLE_AUTH_ENABLED?: string
+	TWITTER_CLIENT_ID?: string
+	TWITTER_CLIENT_SECRET?: string
+	TWITTER_AUTH_ENABLED?: string
+	EMAIL_AUTH_ENABLED?: string
 	memendex_images: R2Bucket
 }
 
@@ -24,6 +27,14 @@ app.use('*', (c, next) => {
     credentials: true,
   })
   return corsMiddleware(c, next)
+})
+
+app.get('/api/auth/providers', (c) => {
+	return c.json({
+		email: c.env.EMAIL_AUTH_ENABLED === 'true',
+		google: c.env.GOOGLE_AUTH_ENABLED === 'true' && !!c.env.GOOGLE_CLIENT_ID && !!c.env.GOOGLE_CLIENT_SECRET,
+		twitter: c.env.TWITTER_AUTH_ENABLED === 'true' && !!c.env.TWITTER_CLIENT_ID && !!c.env.TWITTER_CLIENT_SECRET,
+	})
 })
 
 app.on(['GET', 'POST'], '/api/auth/*', (c) => {
