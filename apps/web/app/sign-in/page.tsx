@@ -11,8 +11,6 @@ type Providers = {
 	twitter: boolean
 }
 
-const emailAuthEnabled = process.env.NEXT_PUBLIC_EMAIL_AUTH_ENABLED === 'true'
-
 export default function SignInPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
@@ -76,7 +74,7 @@ export default function SignInPage() {
       <VStack w="md" gap="md" p="xl" borderWidth="1px" borderRadius="xl" boxShadow="sm" alignItems="center">
         <Heading>サインイン</Heading>
         {error && <Text color="danger">{error}</Text>}
-        {emailAuthEnabled && emailInputForm}
+        {providers?.email && emailInputForm}
         {providers?.google && (
           <Button w="full" variant="outline" onClick={() => handleSocialSignIn('google')}>
             Googleでサインイン
