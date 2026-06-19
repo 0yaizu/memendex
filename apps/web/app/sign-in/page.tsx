@@ -27,18 +27,14 @@ export default function SignInPage() {
     router.push('/')
   }
 
-	const handleGoogleSignIn = async () => {
-		await authClient.signIn.social({
-			provider: 'google',
+	const handleSocialSignIn = async (provider: 'google' | 'twitter') => {
+		const { error: signInError } = await authClient.signIn.social({
+			provider,
 			callbackURL: `${window.location.origin}/`
 		})
-	}
-
-	const handleXSignIn = async () => {
-		await authClient.signIn.social({
-			provider: 'twitter',
-			callbackURL: `${window.location.origin}/`
-		})
+		if (signInError) {
+			setError(signInError.message ?? 'サインインに失敗しました')
+		}
 	}
 
 	const emailInputForm = (
@@ -67,10 +63,10 @@ export default function SignInPage() {
         <Heading>サインイン</Heading>
         {error && <Text color="danger">{error}</Text>}
         {emailAuthEnabled && emailInputForm}
-        <Button w="full" variant="outline" onClick={handleGoogleSignIn}>
+        <Button w="full" variant="outline" onClick={() => handleSocialSignIn('google')}>
           Googleでサインイン
         </Button>
-        <Button w="full" variant="outline" onClick={handleXSignIn}>
+        <Button w="full" variant="outline" onClick={() => handleSocialSignIn('twitter')}>
           Xでサインイン
         </Button>
       </VStack>
