@@ -9,6 +9,8 @@ type Bindings = {
 	CORS_ORIGIN: string
 	GOOGLE_CLIENT_ID: string
 	GOOGLE_CLIENT_SECRET: string
+	TWITTER_CLIENT_ID: string
+	TWITTER_CLIENT_SECRET: string
 	memendex_images: R2Bucket
 }
 
