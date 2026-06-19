@@ -7,6 +7,7 @@ import tagsRoute from './routes/tags'
 type Bindings = {
 	DATABASE_URL: string
 	CORS_ORIGIN?: string
+	API_URL?: string
 	GOOGLE_CLIENT_ID?: string
 	GOOGLE_CLIENT_SECRET?: string
 	GOOGLE_AUTH_ENABLED?: string
