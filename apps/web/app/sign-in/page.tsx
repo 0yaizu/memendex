@@ -1,31 +1,46 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
 import { Center, VStack, Input, Button, Heading, Text } from '@yamada-ui/react'
 
-const emailAuthEnabled = process.env.NEXT_PUBLIC_EMAIL_AUTH_ENABLED === 'true'
+type Providers = {
+	email: boolean
+	google: boolean
+	twitter: boolean
+}
 
 export default function SignInPage() {
-  const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+	const router = useRouter()
+	const [email, setEmail] = useState('')
+	const [password, setPassword] = useState('')
+	const [error, setError] = useState('')
+	const [providers, setProviders] = useState<Providers | null>(null)
 
-  const handleSignIn = async () => {
-    const { error } = await authClient.signIn.email({
-      email,
-      password,
-    })
+	useEffect(() => {
+		fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/providers`, { credentials: 'include' })
+			.then((res) => {
+				if (!res.ok) throw new Error(`HTTP ${res.status}`)
+				return res.json()
+			})
+			.then((data) => setProviders(data))
+			.catch(() => setProviders({ email: false, google: false, twitter: false }))
+	}, [])
 
-    if (error) {
-      setError(error.message ?? 'サインインに失敗しました')
-      return
-    }
+	const handleSignIn = async () => {
+		const { error } = await authClient.signIn.email({
+			email,
+			password,
+		})
 
-    router.push('/')
-  }
+		if (error) {
+			setError(error.message ?? 'サインインに失敗しました')
+			return
+		}
+
+		router.push('/')
+	}
 
 	const handleSocialSignIn = async (provider: 'google' | 'twitter') => {
 		const { error: signInError } = await authClient.signIn.social({
@@ -57,19 +72,27 @@ export default function SignInPage() {
 		</VStack>
 	)
 
-  return (
-    <Center minH="100vh">
-      <VStack w="md" gap="md" p="xl" borderWidth="1px" borderRadius="xl" boxShadow="sm" alignItems="center">
-        <Heading>サインイン</Heading>
-        {error && <Text color="danger">{error}</Text>}
-        {emailAuthEnabled && emailInputForm}
-        <Button w="full" variant="outline" onClick={() => handleSocialSignIn('google')}>
-          Googleでサインイン
-        </Button>
-        <Button w="full" variant="outline" onClick={() => handleSocialSignIn('twitter')}>
-          Xでサインイン
-        </Button>
-      </VStack>
-    </Center>
-  )
+	return (
+		<Center minH="100vh">
+			<VStack w="md" gap="md" p="xl" borderWidth="1px" borderRadius="xl" boxShadow="sm" alignItems="center">
+				<Heading>サインイン</Heading>
+				{error && <Text color="danger">{error}</Text>}
+				{providers?.email && emailInputForm}
+				{providers === null ? (<Text>読み込み中...</Text>) : (
+					<>
+						{providers?.google && (
+							<Button w="full" variant="outline" onClick={() => handleSocialSignIn('google')}>
+								Googleでサインイン
+							</Button>
+						)}
+						{providers?.twitter && (
+							<Button w="full" variant="outline" onClick={() => handleSocialSignIn('twitter')}>
+								Xでサインイン
+							</Button>
+						)}
+					</>
+				)}
+			</VStack>
+		</Center>
+	)
 }
