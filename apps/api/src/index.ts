@@ -14,6 +14,9 @@ type Bindings = {
 	TWITTER_CLIENT_ID?: string
 	TWITTER_CLIENT_SECRET?: string
 	TWITTER_AUTH_ENABLED?: string
+	DISCORD_CLIENT_ID?: string
+	DISCORD_CLIENT_SECRET?: string
+	DISCORD_AUTH_ENABLED?: string
 	EMAIL_AUTH_ENABLED?: string
 	memendex_images: R2Bucket
 }
@@ -35,6 +38,7 @@ app.get('/api/auth/providers', (c) => {
 		email: c.env.EMAIL_AUTH_ENABLED === 'true',
 		google: c.env.GOOGLE_AUTH_ENABLED === 'true' && !!c.env.GOOGLE_CLIENT_ID && !!c.env.GOOGLE_CLIENT_SECRET,
 		twitter: c.env.TWITTER_AUTH_ENABLED === 'true' && !!c.env.TWITTER_CLIENT_ID && !!c.env.TWITTER_CLIENT_SECRET,
+		discord: c.env.DISCORD_AUTH_ENABLED === 'true' && !!c.env.DISCORD_CLIENT_ID && !!c.env.DISCORD_CLIENT_SECRET,
 	})
 })
 

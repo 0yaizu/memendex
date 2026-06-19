@@ -9,6 +9,7 @@ type Providers = {
 	email: boolean
 	google: boolean
 	twitter: boolean
+	discord: boolean
 }
 
 export default function SignInPage() {
@@ -25,7 +26,7 @@ export default function SignInPage() {
 				return res.json()
 			})
 			.then((data) => setProviders(data))
-			.catch(() => setProviders({ email: false, google: false, twitter: false }))
+			.catch(() => setProviders({ email: false, google: false, twitter: false, discord: false }))
 	}, [])
 
 	const handleSignIn = async () => {
@@ -42,7 +43,7 @@ export default function SignInPage() {
 		router.push('/')
 	}
 
-	const handleSocialSignIn = async (provider: 'google' | 'twitter') => {
+	const handleSocialSignIn = async (provider: 'google' | 'twitter' | 'discord') => {
 		const { error: signInError } = await authClient.signIn.social({
 			provider,
 			callbackURL: `${window.location.origin}/`
@@ -88,6 +89,11 @@ export default function SignInPage() {
 						{providers?.twitter && (
 							<Button w="full" variant="outline" onClick={() => handleSocialSignIn('twitter')}>
 								Xでサインイン
+							</Button>
+						)}
+						{providers?.discord && (
+							<Button w="full" variant="outline" onClick={() => handleSocialSignIn('discord')}>
+								Discordでサインイン
 							</Button>
 						)}
 					</>
