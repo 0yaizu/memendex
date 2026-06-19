@@ -12,6 +12,9 @@ export type AuthEnv = {
 	TWITTER_CLIENT_ID?: string
 	TWITTER_CLIENT_SECRET?: string
 	TWITTER_AUTH_ENABLED?: string
+	DISCORD_CLIENT_ID?: string
+	DISCORD_CLIENT_SECRET?: string
+	DISCORD_AUTH_ENABLED?: string
 	EMAIL_AUTH_ENABLED?: string
 }
 
@@ -29,6 +32,12 @@ export function createAuth(env: AuthEnv) {
 		socialProviders.twitter = {
 			clientId: env.TWITTER_CLIENT_ID,
 			clientSecret: env.TWITTER_CLIENT_SECRET,
+		}
+	}
+	if (env.DISCORD_AUTH_ENABLED === 'true' && env.DISCORD_CLIENT_ID && env.DISCORD_CLIENT_SECRET) {
+		socialProviders.discord = {
+			clientId: env.DISCORD_CLIENT_ID,
+			clientSecret: env.DISCORD_CLIENT_SECRET,
 		}
 	}
 
