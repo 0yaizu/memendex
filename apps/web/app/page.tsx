@@ -1,6 +1,7 @@
 'use client'
 
 import useSWR from 'swr'
+import NextLink from 'next/link'
 import { apiClient } from '@lib/api-client'
 import { Box, Grid, Image, Text, VStack, Heading, Center, Loading, Link } from '@yamada-ui/react'
 
@@ -62,7 +63,7 @@ export default function GalleryPage() {
       <Heading mb="lg">ギャラリー</Heading>
       <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap="md">
         {memes.map((meme) => (
-          <Link key={meme.id} href={`/memes/${meme.id}`}>
+          <NextLink key={meme.id} href={`/memes/${meme.id}`} style={{ display: 'block' }}>
             <VStack
               borderWidth="1px"
               borderRadius="md"
@@ -86,7 +87,7 @@ export default function GalleryPage() {
                 )}
               </Box>
             </VStack>
-          </Link>
+          </NextLink>
         ))}
       </Grid>
     </Box>

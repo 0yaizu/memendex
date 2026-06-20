@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { apiClient } from '@/lib/api-client'
+import NextLink from 'next/link'
 import { Box, Heading, Text, VStack, HStack, Badge, Center, Button, Link } from '@yamada-ui/react'
 import { Loading } from '@yamada-ui/react'
 import ImagePreview from '@components/image-preview'
@@ -98,9 +99,9 @@ export default function MemeDetailPage() {
           {new Date(meme.createdAt).toLocaleDateString('ja-JP')}
         </Text>
 				{session?.user.id === meme.userId && (
-					<Button padding="sm">
-						<Link href={`/memes/${id}/edit`}>編集</Link>
-					</Button>
+					<NextLink href={`/memes/${id}/edit`}>
+						<Button padding="sm">編集</Button>
+					</NextLink>
 				)}
       </VStack>
     </Box>
