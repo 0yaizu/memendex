@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import useSWR from 'swr'
 import { apiClient } from '@lib/api-client'
 import { Box, Grid, Image, Text, VStack, Heading, Center, Loading, Link } from '@yamada-ui/react'
 
@@ -29,27 +29,13 @@ type Meme = {
   memeTags: MemeTag[]
 }
 
+const fetchMemes = () => apiClient.get('/api/memes').then((res) => res.json())
+
 export default function GalleryPage() {
-  const [memes, setMemes] = useState<Meme[]>([])
-  const [loading, setLoading] = useState(true)
+  const { data, isLoading } = useSWR<{ memes: Meme[] }>('/api/memes', fetchMemes)
+  const memes = data?.memes ?? []
 
-  useEffect(() => {
-    const fetchMemes = async () => {
-			try {
-				const res = await apiClient.get('/api/memes')
-				if (!res.ok) return
-				const data = await res.json()
-				setMemes(data.memes)
-			} catch (e) {
-				console.error(e)
-			} finally {
-				setLoading(false)
-			}
-    }
-    fetchMemes()
-  }, [])
-
-  if (loading) {
+  if (isLoading) {
     return (
       <Center minH="50vh">
         <Loading.Dots />
