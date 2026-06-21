@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import useSWR from 'swr'
 import { useParams, useRouter } from 'next/navigation'
 import { apiClient } from '@/lib/api-client'
 import NextLink from 'next/link'
-import { Box, Heading, Text, VStack, HStack, Badge, Center, Button, Link } from '@yamada-ui/react'
+import { Box, Heading, Text, VStack, HStack, Badge, Center, Button } from '@yamada-ui/react'
 import { Loading } from '@yamada-ui/react'
 import ImagePreview from '@components/image-preview'
 import { getMemeImageUrl } from '@lib/meme'
@@ -36,30 +36,20 @@ type Meme = {
 }
 
 export default function MemeDetailPage() {
-	const router = useRouter()
-	const { data: session } = authClient.useSession()
-	const params = useParams()
-	const id = Array.isArray(params.id) ? params.id[0] : params.id
-  const [meme, setMeme] = useState<Meme | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const router = useRouter()
+  const { data: session } = authClient.useSession()
+  const params = useParams()
+  const id = Array.isArray(params.id) ? params.id[0] : params.id
 
-  useEffect(() => {
-    const fetchMeme = async () => {
-      const res = await apiClient.get(`/api/memes/${id}`)
-      if (!res.ok) {
-        setError('ミームが見つかりません')
-        setLoading(false)
-        return
-      }
-      const data = await res.json()
-      setMeme(data.meme)
-      setLoading(false)
-    }
-    fetchMeme()
-  }, [id])
+  const { data, isLoading, error } = useSWR<{ meme: Meme }>(
+    id ? `/api/memes/${id}` : null,
+    (url: string) => apiClient.get(url).then((res) => {
+      if (!res.ok) throw new Error('ミームが見つかりません')
+      return res.json()
+    })
+  )
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Center minH="50vh">
         <Loading.Dots />
@@ -67,13 +57,15 @@ export default function MemeDetailPage() {
     )
   }
 
-  if (error || !meme) {
+  if (error || !data?.meme) {
     return (
       <Center minH="50vh">
-        <Text>{error}</Text>
+        <Text>{error?.message ?? 'ミームが見つかりません'}</Text>
       </Center>
     )
   }
+
+  const meme = data.meme
 
   return (
     <Box p="lg" maxW="800px" mx="auto">
@@ -98,11 +90,11 @@ export default function MemeDetailPage() {
         <Text fontSize="xs" color="gray.500">
           {new Date(meme.createdAt).toLocaleDateString('ja-JP')}
         </Text>
-				{session?.user.id === meme.userId && (
-					<NextLink href={`/memes/${id}/edit`}>
-						<Button padding="sm">編集</Button>
-					</NextLink>
-				)}
+        {session?.user.id === meme.userId && (
+          <NextLink href={`/memes/${id}/edit`}>
+            <Button padding="sm">編集</Button>
+          </NextLink>
+        )}
       </VStack>
     </Box>
   )
