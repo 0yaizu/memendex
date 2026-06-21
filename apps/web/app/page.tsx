@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { apiClient } from '@lib/api-client'
-import { Box, Grid, Image, Text, VStack, Heading, Center, Loading, Link } from '@yamada-ui/react'
+import useSWR from 'swr'
+import { fetcher } from '@lib/fetcher'
+import { Box, Grid, Image, Text, VStack, Heading, Center, Loading } from '@yamada-ui/react'
+import Link from 'next/link'
 
 type Tag = {
   id: number
@@ -29,27 +30,15 @@ type Meme = {
   memeTags: MemeTag[]
 }
 
+type ApiResponse = {
+  memes: Meme[]
+}
+
 export default function GalleryPage() {
-  const [memes, setMemes] = useState<Meme[]>([])
-  const [loading, setLoading] = useState(true)
+  const { data, isLoading } = useSWR<ApiResponse>('/api/memes', fetcher)
+  const memes = data?.memes ?? []
 
-  useEffect(() => {
-    const fetchMemes = async () => {
-			try {
-				const res = await apiClient.get('/api/memes')
-				if (!res.ok) return
-				const data = await res.json()
-				setMemes(data.memes)
-			} catch (e) {
-				console.error(e)
-			} finally {
-				setLoading(false)
-			}
-    }
-    fetchMemes()
-  }, [])
-
-  if (loading) {
+  if (isLoading) {
     return (
       <Center minH="50vh">
         <Loading.Dots />
@@ -60,16 +49,16 @@ export default function GalleryPage() {
   if (memes.length === 0) {
     return (
       <Center minH="50vh" justifyContent="center" textAlign="center">
-				<Text>
-					まだミームがありません
-					<br/>
-					<Link href="/upload" color="blue.700">
-						アップロードしてみましょう
-					</Link>
-				</Text>
-			</Center>
-		)
-	}
+        <Text>
+          まだミームがありません
+          <br />
+          <Link href="/upload" color="blue.700">
+            アップロードしてみましょう
+          </Link>
+        </Text>
+      </Center>
+    )
+  }
 
   return (
     <Box p="lg">

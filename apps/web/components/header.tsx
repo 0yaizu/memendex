@@ -2,7 +2,8 @@
 
 import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
-import { Box, Heading, HStack, Button, Link } from '@yamada-ui/react'
+import { Box, Heading, HStack, Button } from '@yamada-ui/react'
+import Link from 'next/link'
 
 export default function Header() {
   const router = useRouter()

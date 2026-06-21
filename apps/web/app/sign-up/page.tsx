@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
-import { Center, VStack, Input, Button, Heading, Text, Link } from '@yamada-ui/react'
+import { Center, VStack, Input, Button, Heading, Text } from '@yamada-ui/react'
+import Link from 'next/link'
 
 export default function SignUpPage() {
   const router = useRouter()
