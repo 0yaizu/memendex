@@ -1,8 +1,5 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-import { apiClient } from '@lib/api-client'
-import { Box, Grid, Image, Text, VStack, Heading, Center, Loading, Link } from '@yamada-ui/react'
+import { serverApiClient } from '@lib/server-api-client'
+import { Box, Grid, Image, Text, VStack, Heading, Center, Link } from '@yamada-ui/react'
 
 type Tag = {
   id: number
@@ -29,36 +26,13 @@ type Meme = {
   memeTags: MemeTag[]
 }
 
-export default function GalleryPage() {
-  const [memes, setMemes] = useState<Meme[]>([])
-  const [loading, setLoading] = useState(true)
+export default async function GalleryPage() {
+	const res = await serverApiClient.get('/api/memes')
+	const data = await res.json() as { memes: Meme[] }
+	const memes = data.memes
 
-  useEffect(() => {
-    const fetchMemes = async () => {
-			try {
-				const res = await apiClient.get('/api/memes')
-				if (!res.ok) return
-				const data = await res.json()
-				setMemes(data.memes)
-			} catch (e) {
-				console.error(e)
-			} finally {
-				setLoading(false)
-			}
-    }
-    fetchMemes()
-  }, [])
-
-  if (loading) {
-    return (
-      <Center minH="50vh">
-        <Loading.Dots />
-      </Center>
-    )
-  }
-
-  if (memes.length === 0) {
-    return (
+	if (memes.length === 0) {
+		return (
       <Center minH="50vh" justifyContent="center" textAlign="center">
 				<Text>
 					まだミームがありません
