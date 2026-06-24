@@ -1,9 +1,9 @@
-import { Center, Loading } from '@yamada-ui/react'
+import { Center, Loading as LoadingSpinner } from '@yamada-ui/react'
 
 export default function Loading() {
   return (
     <Center minH="50vh">
-      <Loading.Dots />
+      <LoadingSpinner.Dots />
     </Center>
   )
 }
