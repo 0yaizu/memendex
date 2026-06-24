@@ -28,7 +28,7 @@ type Meme = {
 
 export default async function GalleryPage() {
 	const data = await serverApiClient.get<{ memes: Meme[] }>('/api/memes')
-	const memes = data.memes
+	const memes = data.memes ?? []
 
 	if (memes.length === 0) {
 		return (
