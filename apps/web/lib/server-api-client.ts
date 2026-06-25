@@ -17,4 +17,8 @@ export const serverApiClient = {
 		if (!res.ok) throw new Error(String(res.status))
 		return res.json() as T
 	},
+	isLoggedIn: async (): Promise<boolean> => {
+		const cookieStore = await cookies()
+		return cookieStore.has('better-auth.session_token')
+	},
 }

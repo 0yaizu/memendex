@@ -4,9 +4,15 @@ import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
 import { Box, Heading, HStack, Button, Link } from '@yamada-ui/react'
 
-export default function Header() {
+type Props = {
+  isLoggedIn: boolean
+}
+
+export default function Header({ isLoggedIn }: Props) {
   const router = useRouter()
-	const { data: session } = authClient.useSession()
+  const { data: session, isPending } = authClient.useSession()
+
+  const showNav = isPending ? isLoggedIn : !!session
 
   const handleSignOut = async () => {
     await authClient.signOut()
@@ -19,7 +25,7 @@ export default function Header() {
         <Link href="/">
 					<Heading size="md">Memendex</Heading>
 				</Link>
-        {session && (
+        {showNav && (
 					<HStack gap="sm">
 						<Button padding="sm" onClick={() => router.push('/upload')} variant="ghost">アップロード</Button>
 						<Button padding="sm" onClick={handleSignOut}>サインアウト</Button>
