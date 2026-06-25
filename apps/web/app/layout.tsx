@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { ColorModeScript, UIProvider } from "@packages/ui";
+import { ColorModeScript, UIProvider } from "@yamada-ui/react";
 import "./globals.css";
 import Header from "@components/header";
 import { serverApiClient } from "@lib/server-api-client";
